@@ -5,4 +5,15 @@
     <string name="title_tab_home">Home</string>
     <string name="title_tab_cart">My Cart</string>
     <string name="title_tab_profile">My Profile</string>
+    <string name="greetings">Good Morning, Cella</string>
+    <string name="greetings2">what do you want to eat today?</string>
+    <string name="name_greeting">Good Morning, Cella!</string>
+    <string name="greeting">What do you want to eat today?</string>
+    <string name="search_bar_promotion">buy 1 food get free drink</string>
+    <string name="text_menu_banner">Our Favourite Menu</string>
+    <string name="text_discount_banner">Buy now discount up to 30%</string>
+    <string name="text_btn_banner">Order Now</string>
+    <string name="text_banner_menu">FOODS AND DRINKS</string>
+    <string name="tv_menu">Today\'s Popular Menu</string>
+    <string name="tv_rupiah">Rp.</string>
 </resources>
