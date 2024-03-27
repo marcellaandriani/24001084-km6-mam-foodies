@@ -16,4 +16,5 @@
     <string name="text_banner_menu">FOODS AND DRINKS</string>
     <string name="tv_menu">Today\'s Popular Menu</string>
     <string name="tv_rupiah">Rp.</string>
+    <string name="tv_location">LOCATION</string>
 </resources>

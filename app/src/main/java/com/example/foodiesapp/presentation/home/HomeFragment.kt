@@ -1,5 +1,6 @@
 package com.example.foodiesapp.presentation.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,7 @@ import com.example.foodiesapp.data.model.Menu
 import com.example.foodiesapp.data.repository.CategoryRepositoryImpl
 import com.example.foodiesapp.data.repository.MenuRepositoryImpl
 import com.example.foodiesapp.databinding.FragmentHomeBinding
+import com.example.foodiesapp.presentation.detailfood.DetailFoodActivity
 import com.example.foodiesapp.presentation.home.adapter.CategoryAdapter
 import com.example.foodiesapp.presentation.home.adapter.MenuAdapter
 import com.example.foodiesapp.utils.GenericViewModelFactory
@@ -93,7 +95,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToDetail(item: Menu) {
-        Toast.makeText(requireContext(), item.name, Toast.LENGTH_SHORT).show()
+        val intent = Intent(requireContext(), DetailFoodActivity::class.java).apply {
+            putExtra(DetailFoodActivity.EXTRA_MENU, item)
+        }
+        startActivity(intent)
     }
 }
 
