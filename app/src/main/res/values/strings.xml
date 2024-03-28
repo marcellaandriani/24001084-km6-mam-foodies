@@ -17,4 +17,22 @@
     <string name="tv_menu">Today\'s Popular Menu</string>
     <string name="tv_rupiah">Rp.</string>
     <string name="tv_location">LOCATION</string>
+    <string name="text_my_profile">MY PROFILE</string>
+    <string name="text_username">USERNAME</string>
+    <string name="text_enter_username">Enter Username</string>
+    <string name="text_password">PASSWORD</string>
+    <string name="text_enter_password">Enter Password</string>
+    <string name="text_email">EMAIL</string>
+    <string name="text_enter_email">Enter Email</string>
+    <string name="text_no_telp">NO. TELP</string>
+    <string name="text_enter_number_phone">Enter Number Phone</string>
+    <string name="hint_username">USERNAME</string>
+    <string name="text_et_username">Marcella Andriani Mahadewi</string>
+    <string name="hint_password">PASSWORD</string>
+    <string name="text_et_password">jajanterus</string>
+    <string name="hint_email">EMAIL</string>
+    <string name="text_et_email">marcellaandr22@gmail,com</string>
+    <string name="hint_number_phone">NUMBER PHONE</string>
+    <string name="text_et_number_phone">0812345678910</string>
+
 </resources>
