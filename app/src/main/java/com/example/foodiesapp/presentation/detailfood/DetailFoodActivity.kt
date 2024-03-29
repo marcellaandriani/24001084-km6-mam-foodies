@@ -1,74 +1,110 @@
 package com.example.foodiesapp.presentation.detailfood
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import coil.load
+import com.example.foodiesapp.R
+import com.example.foodiesapp.data.datasource.cart.CartDataSource
+import com.example.foodiesapp.data.datasource.cart.CartDatabaseDataSource
 import com.example.foodiesapp.data.model.Menu
+import com.example.foodiesapp.data.repository.CartRepository
+import com.example.foodiesapp.data.repository.CartRepositoryImpl
+import com.example.foodiesapp.data.source.local.database.AppDatabase
 import com.example.foodiesapp.databinding.ActivityDetailFoodBinding
+import com.example.foodiesapp.utils.GenericViewModelFactory
+import com.example.foodiesapp.utils.proceedWhen
+import com.example.foodiesapp.utils.toIndonesianFormat
 
-class DetailFoodActivity : AppCompatActivity() {
-
-    companion object {
-        const val EXTRA_MENU = "EXTRA_MENU"
-    }
-
-    private lateinit var binding: ActivityDetailFoodBinding
-    private var quantity = 0
-    private var totalPrice = 0
+    class DetailFoodActivity : AppCompatActivity() {
+        private val binding: ActivityDetailFoodBinding by lazy {
+            ActivityDetailFoodBinding.inflate(layoutInflater) }
+        private val viewModel: DetailFoodViewModel by viewModels {
+            val db = AppDatabase.getInstance(this)
+            val ds: CartDataSource = CartDatabaseDataSource(db.cartDao())
+            val rp: CartRepository = CartRepositoryImpl(ds)
+            GenericViewModelFactory.create(
+                DetailFoodViewModel(intent?.extras, rp)
+            )
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityDetailFoodBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         val menu = intent.getParcelableExtra<Menu>(EXTRA_MENU)
-        menu?.let { displayMenuDetail(it) }
+        menu?.let { bindMenu(it) }
+        setClickListener()
+        observeData()
     }
 
-    private fun displayMenuDetail(menu: Menu) {
-        binding.apply {
+    private fun setClickListener() {
+        binding.ivMinus.setOnClickListener {
+            viewModel.minus()
+        }
+        binding.ivPlus.setOnClickListener {
+            viewModel.add()
+        }
+        binding.btnAddToCart.setOnClickListener {
+            addMenuToCart()
+        }
+    }
+
+    private fun addMenuToCart() {
+        viewModel.addToCart().observe(this) { result ->
+            result.proceedWhen(
+                doOnSuccess = {
+                    Toast.makeText(this,
+                        getString(R.string.text_add_to_cart_success), Toast.LENGTH_SHORT).show()
+                    finish()
+                },
+                doOnError = {
+                    Toast.makeText(this,
+                        getString(R.string.text_add_to_cart_failed), Toast.LENGTH_SHORT).show()
+                },
+                doOnLoading = {
+                    Toast.makeText(this, getString(R.string.text_loading) ,Toast.LENGTH_SHORT).show()
+                }
+            )
+        }
+    }
+
+    private fun bindMenu(menu: Menu) {
+        with(binding) {
             ivDetailMenu.load(menu.imgUrl) {
                 crossfade(true)
             }
-            binding.tvNameMenu.text = menu.name
-            binding.tvPriceMenu.text = menu.price.toString()
-            binding.tvDescMenu.text = menu.description
-            binding.tvAddress.text = menu.address
-            quantity = 1
-            tvTotal.text = quantity.toString()
-            totalPrice = quantity * menu.unitPrice
-            btnAddToCart.text = "Tambah ke Keranjang - Rp $totalPrice"
-
-            ivRemove.setOnClickListener {
-                if (quantity > 1) {
-                    quantity--
-                    tvTotal.text = quantity.toString()
-                    totalPrice = quantity * menu.unitPrice
-                    btnAddToCart.text = "Tambah ke Keranjang - Rp $totalPrice"
-                } else {
-                    Toast.makeText(
-                        this@DetailFoodActivity,
-                        "Maaf, minimal pembelian 1",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
-            ivPlus.setOnClickListener {
-                quantity++
-                tvTotal.text = quantity.toString()
-                totalPrice = quantity * menu.unitPrice
-                btnAddToCart.text = "Tambah ke Keranjang - Rp $totalPrice"
-            }
-
+            tvNameMenu.text = menu.name
+            tvDescMenu.text = menu.description
+            tvPriceMenu.text = menu.price.toIndonesianFormat()
+            tvAddress.text = menu.address
             tvAddress.setOnClickListener {
                 val i = Intent(Intent.ACTION_VIEW)
-                i.setData(Uri.parse(menu.mapsUrl))
+                i.data = Uri.parse(menu.mapsUrl)
                 startActivity(i)
             }
+        }
+    }
+
+    private fun observeData() {
+        viewModel.priceLiveData.observe(this) { price ->
+            binding.btnAddToCart.isEnabled = price != 0.0
+            binding.btnAddToCart.text = "Tambahkan ke Keranjang - ${price.toIndonesianFormat()}"
+        }
+        viewModel.menuCountLiveData.observe(this) { count ->
+            binding.tvTotal.text = count.toString()
+        }
+    }
+
+    companion object {
+        const val EXTRA_MENU = "EXTRA_MENU"
+        fun startActivity(context: Context, menu: Menu) {
+            val intent = Intent(context, DetailFoodActivity::class.java)
+            intent.putExtra(EXTRA_MENU, menu)
+            context.startActivity(intent)
         }
     }
 }

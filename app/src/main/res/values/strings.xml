@@ -34,5 +34,29 @@
     <string name="text_et_email">marcellaandr22@gmail,com</string>
     <string name="hint_number_phone">NUMBER PHONE</string>
     <string name="text_et_number_phone">0812345678910</string>
+    <string name="text_add_to_cart_success">Add to cart Success</string>
+    <string name="text_add_to_cart_failed">Add to cart Failed</string>
+    <string name="ltext_oading">Loading</string>
+    <string name="text_loading">Loading</string>
+    <string name="text_hint_notes">Notes</string>
+    <string name="total_quantity">x%s</string>
+    <string name="text_cart_is_empty">Cart is Empty</string>
+    <string name="text_checkout_your_cart">CHECKOUT YOUR CART</string>
+    <string name="text_total_price">Total Price</string>
+    <string name="text_checkout">Checkout</string>
+    <string name="text_dialog">Terimakasih, Pesanan sedang di proses</string>
+    <string name="text_tutup">Tutup</string>
+    <string name="text_keranjang_belanja">KERANJANG BELANJA</string>
+    <string name="text_total_belanja">Total Belanja</string>
+    <string name="text_checkout_btn">Checkout</string>
+    <string name="text_choose_delivery_method">CHOOSE DELIVERY METHOD</string>
+    <string name="text_pick_up_in_store">PICK UP IN STORE</string>
+    <string name="text_delivery">DELIVERY</string>
+    <string name="text_choose_payment_method">CHOOSE PAYMENT METHOD</string>
+    <string name="text_cash">CASH</string>
+    <string name="text_e_wallet">E-WALLET</string>
+    <string name="text_rincian_pembayaran">RINCIAN PEMBAYARAN</string>
+    <string name="text_terimakasih_pesananmu_sedang_diproses">Terimakasih! Pesananmu Sedang Diproses...</string>
+
 
 </resources>

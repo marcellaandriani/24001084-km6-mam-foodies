@@ -63,5 +63,8 @@
     <color name="md_theme_dark_scrim">#000000</color>
     <color name="black">#FF000000</color>
     <color name="yellow_background">#FFFBF0</color>
+    <color name="orange">#F44336</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="white">#FFFFFFFF</color>
 
 </resources>

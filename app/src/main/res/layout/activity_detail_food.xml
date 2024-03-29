@@ -143,12 +143,12 @@
             android:padding="16dp">
 
             <ImageView
-                android:id="@+id/iv_remove"
+                android:id="@+id/iv_minus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="128dp"
                 android:layout_marginTop="16dp"
-                android:src="@drawable/ic_remove"
+                android:src="@drawable/ic_minus"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
@@ -161,8 +161,8 @@
                 android:layout_marginEnd="16dp"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toStartOf="@id/iv_plus"
-                app:layout_constraintStart_toEndOf="@id/iv_remove"
-                app:layout_constraintTop_toTopOf="@id/iv_remove" />
+                app:layout_constraintStart_toEndOf="@id/iv_minus"
+                app:layout_constraintTop_toTopOf="@id/iv_minus" />
 
             <ImageView
                 android:id="@+id/iv_plus"
@@ -171,7 +171,7 @@
                 android:layout_marginEnd="128dp"
                 android:src="@drawable/ic_add"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/iv_remove"
+                app:layout_constraintTop_toTopOf="@id/iv_minus"
                 app:layout_constraintBottom_toBottomOf="@id/tv_total" />
 
             <Button
@@ -179,7 +179,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 tools:text="Masukkan ke Keranjang"
-                app:layout_constraintTop_toBottomOf="@id/iv_remove"
+                app:layout_constraintTop_toBottomOf="@id/iv_minus"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="14dp"
