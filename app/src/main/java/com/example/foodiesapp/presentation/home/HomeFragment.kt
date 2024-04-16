@@ -10,30 +10,41 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.foodiesapp.R
-import com.example.foodiesapp.data.datasource.category.DummyCategoryDataSource
-import com.example.foodiesapp.data.datasource.menu.DummyMenuDataSource
+import com.example.foodiesapp.data.datasource.category.CategoryApiDataSource
+import com.example.foodiesapp.data.datasource.category.CategoryDataSource
+import com.example.foodiesapp.data.datasource.menu.MenuApiDataSource
+import com.example.foodiesapp.data.datasource.menu.MenuDataSource
 import com.example.foodiesapp.data.model.Category
 import com.example.foodiesapp.data.model.Menu
 import com.example.foodiesapp.data.repository.CategoryRepositoryImpl
 import com.example.foodiesapp.data.repository.MenuRepositoryImpl
+import com.example.foodiesapp.data.source.network.service.FoodiesApiService
 import com.example.foodiesapp.databinding.FragmentHomeBinding
 import com.example.foodiesapp.presentation.detailfood.DetailFoodActivity
 import com.example.foodiesapp.presentation.home.adapter.CategoryAdapter
 import com.example.foodiesapp.presentation.home.adapter.MenuAdapter
 import com.example.foodiesapp.utils.GenericViewModelFactory
+import com.example.foodiesapp.utils.proceedWhen
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
-    private lateinit var categoryAdapter: CategoryAdapter
     private lateinit var menuAdapter: MenuAdapter
-    private var isUsingGridMode : Boolean = true // Set default mode to grid
+    private var isUsingGridMode: Boolean = true
     private var gridLayoutManager: GridLayoutManager? = null
+
     private val viewModel: HomeViewModel by viewModels {
-        val menuDataSource = DummyMenuDataSource()
+        val service = FoodiesApiService.invoke()
+        val menuDataSource: MenuDataSource = MenuApiDataSource(service)
         val menuRepository = MenuRepositoryImpl(menuDataSource)
-        val categoryDataSource = DummyCategoryDataSource()
+        val categoryDataSource: CategoryDataSource = CategoryApiDataSource(service)
         val categoryRepository = CategoryRepositoryImpl(categoryDataSource)
         GenericViewModelFactory.create(HomeViewModel(categoryRepository, menuRepository))
+    }
+
+    private val categoryAdapter: CategoryAdapter by lazy {
+        CategoryAdapter {
+            getMenuData(it.name)
+        }
     }
 
     override fun onCreateView(
@@ -48,15 +59,32 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerViews()
         setClickAction()
-        bindCategory(viewModel.getCategories())
-        bindMenu(viewModel.getMenus())
+        getCategoryData()
+        getMenuData(null)
         setButtonImage(isUsingGridMode)
     }
 
+    private fun getCategoryData() {
+        viewModel.getCategories().observe(viewLifecycleOwner) {
+            it.proceedWhen(
+                doOnSuccess = {
+                    it.payload?.let { data -> bindCategory(data) }
+                }
+            )
+        }
+    }
+
+    private fun getMenuData(category: String? = null) {
+        viewModel.getMenus(category).observe(viewLifecycleOwner) {
+            it.proceedWhen(
+                doOnSuccess = {
+                    it.payload?.let { data -> bindMenu(data) }
+                }
+            )
+        }
+    }
 
     private fun setupRecyclerViews() {
-        categoryAdapter = CategoryAdapter{category ->
-            Toast.makeText(requireContext(), category.name, Toast.LENGTH_SHORT).show()}
         binding.layoutCategory.rvCategory.adapter = categoryAdapter
 
         menuAdapter = MenuAdapter(object : MenuAdapter.OnItemClickedListener<Menu> {
@@ -85,7 +113,6 @@ class HomeFragment : Fragment() {
             setButtonImage(isUsingGridMode)
             val columnCount = if (isUsingGridMode) 2 else 1
             gridLayoutManager?.spanCount = columnCount
-            bindMenu(viewModel.getMenus())
         }
     }
 
@@ -101,5 +128,3 @@ class HomeFragment : Fragment() {
         startActivity(intent)
     }
 }
-
-

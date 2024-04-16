@@ -21,7 +21,7 @@ class CategoryAdapter (private val itemClick: (Category) -> Unit) :
                     oldItem: Category,
                     newItem: Category
                 ): Boolean {
-                    return oldItem.id == newItem.id
+                    return oldItem.name == newItem.name
                 }
 
                 override fun areContentsTheSame(
@@ -56,7 +56,7 @@ class CategoryAdapter (private val itemClick: (Category) -> Unit) :
 
         fun bindView(item: Category) {
             with(item) {
-                binding.ivCategory.load(item.imgUrl) {
+                binding.ivCategory.load(item.imageUrl) {
                     crossfade(true)
                 }
                 binding.tvCategoryName.text = item.name

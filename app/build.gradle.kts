@@ -37,6 +37,24 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        buildConfig = true
+    }
+    flavorDimensions += "env"
+    productFlavors {
+        create("production") {
+            buildConfigField(
+                type = "String",
+                name = "BASE_URL",
+                value = "\"https://api-restaurant.binaracademy.org/\""
+            )
+        }
+        create("integration") {
+            buildConfigField(
+                type = "String",
+                name = "BASE_URL",
+                value = "\"https://api-restaurant.binaracademy.org/\""
+            )
+        }
     }
 }
 
@@ -58,6 +76,10 @@ dependencies {
     ksp(libs.room.compiler)
     implementation(libs.coroutine.core)
     implementation(libs.coroutine.android)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.okhttp)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
