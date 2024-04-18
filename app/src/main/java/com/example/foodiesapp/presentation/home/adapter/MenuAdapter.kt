@@ -14,7 +14,7 @@ import com.example.foodiesapp.databinding.ItemListMenuBinding
 
 class MenuAdapter(
     private val listener: OnItemClickedListener<Menu>,
-    private val listMode: Int = MODE_LIST
+    var listMode: Int = MODE_LIST
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -40,7 +40,7 @@ class MenuAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return if (listMode == MODE_GRID) {
+        return if (viewType == MODE_GRID) {
             val binding = ItemGridMenuBinding.inflate(inflater, parent, false)
             MenuGridItemViewHolder(binding, listener)
         } else {
@@ -55,6 +55,10 @@ class MenuAdapter(
         if (holder is ViewHolderBinder<*>) {
             (holder as ViewHolderBinder<Menu>).bind(asyncDataDiffer.currentList[position])
         }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return listMode
     }
 
     interface OnItemClickedListener<T> {

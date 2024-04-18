@@ -57,6 +57,36 @@
     <string name="text_e_wallet">E-WALLET</string>
     <string name="text_rincian_pembayaran">RINCIAN PEMBAYARAN</string>
     <string name="text_terimakasih_pesananmu_sedang_diproses">Terimakasih! Pesananmu Sedang Diproses...</string>
+    <string name="text_highlight_login_here">Login Here</string>
+    <string name="text_password_does_not_match">Password does not match</string>
+    <string name="text_error_email_empty">Email should not be empty</string>
+    <string name="text_error_email_invalid">Enter a valid email</string>
+    <string name="text_error_password_empty">Password should not be empty</string>
+    <string name="text_error_password_less_than_8_char">Password cannot less than 8 characters</string>
+    <string name="text_error_name_cannot_empty">Name cannot be empty</string>
+    <string name="title_email_input_profile">Email</string>
+    <string name="email_hint">Input Your Email</string>
+    <string name="title_password_input_profile">Password</string>
+    <string name="password_hint">Input Your Password</string>
+    <string name="text_highlight_register_here">Register Here</string>
+    <string name="text_highlight_register">Register Here</string>
+    <string name="toast_error">Tolong masukkan data yang benar</string>
+    <string name="text_login_here">LOGIN HERE</string>
+    <string name="text_nav_to_register">Not Register Yet? Register Here</string>
+    <string name="text_btn_login">LOGIN</string>
+    <string name="text_tittle_username">Username</string>
+    <string name="text_input_username">Input Username</string>
+    <string name="text_title_email">Email</string>
+    <string name="text_input_email">Input Email</string>
+    <string name="text_title_password">Password</string>
+    <string name="text_input_password">Input Password</string>
+    <string name="text_confirm_password">Confirm Password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="hint_input_number_phone">Input Number Phone</string>
+    <string name="text_register_your_account">REGISTER YOUR ACCOUNT</string>
+    <string name="text_btn_register">Register</string>
+    <string name="text_already_have_an_account_login_here">Already have an account? Login Here</string>
+    <string name="text_btn_logout">Logout</string>
 
 
 </resources>
