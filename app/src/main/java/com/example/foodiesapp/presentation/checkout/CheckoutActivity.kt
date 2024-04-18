@@ -1,6 +1,7 @@
 package com.example.foodiesapp.presentation.checkout
 
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.ViewGroup
 import android.view.Window
@@ -16,15 +17,22 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.example.foodiesapp.R
+import com.example.foodiesapp.data.datasource.auth.AuthDataSource
+import com.example.foodiesapp.data.datasource.auth.FirebaseAuthDataSource
 import com.example.foodiesapp.data.datasource.cart.CartDataSource
 import com.example.foodiesapp.data.datasource.cart.CartDatabaseDataSource
 import com.example.foodiesapp.data.repository.CartRepository
 import com.example.foodiesapp.data.repository.CartRepositoryImpl
+import com.example.foodiesapp.data.repository.UserRepository
+import com.example.foodiesapp.data.repository.UserRepositoryImpl
 import com.example.foodiesapp.data.source.local.database.AppDatabase
+import com.example.foodiesapp.data.source.network.firebase.FirebaseService
+import com.example.foodiesapp.data.source.network.firebase.FirebaseServiceImpl
 import com.example.foodiesapp.databinding.ActivityCheckoutBinding
 import com.example.foodiesapp.presentation.cart.CartViewModel
 import com.example.foodiesapp.presentation.checkout.adapter.PriceListAdapter
 import com.example.foodiesapp.presentation.common.adapter.CartListAdapter
+import com.example.foodiesapp.presentation.login.LoginActivity
 import com.example.foodiesapp.utils.GenericViewModelFactory
 import com.example.foodiesapp.utils.proceedWhen
 import com.example.foodiesapp.utils.toIndonesianFormat
@@ -36,10 +44,13 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private val viewModel: CheckoutViewModel by viewModels {
-        val db = AppDatabase.getInstance(this)
-        val ds: CartDataSource = CartDatabaseDataSource(db.cartDao())
-        val rp: CartRepository = CartRepositoryImpl(ds)
-        GenericViewModelFactory.create(CheckoutViewModel(rp))
+        val service: FirebaseService = FirebaseServiceImpl()
+        val firebaseDataSource: AuthDataSource = FirebaseAuthDataSource(service)
+        val firebaseRepository: UserRepository = UserRepositoryImpl(firebaseDataSource)
+        val database = AppDatabase.getInstance(this)
+        val dataSource: CartDataSource = CartDatabaseDataSource(database.cartDao())
+        val cartRepository: CartRepository = CartRepositoryImpl(dataSource)
+        GenericViewModelFactory.create(CheckoutViewModel(cartRepository, firebaseRepository))
     }
 
     private val adapter: CartListAdapter by lazy {
@@ -47,7 +58,6 @@ class CheckoutActivity : AppCompatActivity() {
     }
     private val priceItemAdapter: PriceListAdapter by lazy {
         PriceListAdapter {
-
         }
     }
 
@@ -61,8 +71,12 @@ class CheckoutActivity : AppCompatActivity() {
 
     private fun setClickListeners() {
         binding.btnCheckout.setOnClickListener {
-            showSuccessDialog()
-
+            if (viewModel.isLoggedIn()) {
+                viewModel.deleteAllCart()
+                showSuccessDialog()
+            } else {
+                navigateToLogin()
+            }
         }
     }
 
@@ -90,6 +104,10 @@ class CheckoutActivity : AppCompatActivity() {
 
         dialog.show()
 
+    }
+
+    private fun navigateToLogin() {
+        startActivity(Intent(this, LoginActivity::class.java))
     }
 
     private fun setupList() {

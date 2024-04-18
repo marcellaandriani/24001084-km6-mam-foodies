@@ -29,7 +29,6 @@ import com.example.foodiesapp.utils.proceedWhen
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var menuAdapter: MenuAdapter
-    private var isUsingGridMode: Boolean = true
     private var gridLayoutManager: GridLayoutManager? = null
 
     private val viewModel: HomeViewModel by viewModels {
@@ -61,7 +60,14 @@ class HomeFragment : Fragment() {
         setClickAction()
         getCategoryData()
         getMenuData(null)
-        setButtonImage(isUsingGridMode)
+        observeGridMode()
+    }
+
+    private fun observeGridMode() {
+        viewModel.isUsingGrid.observe(viewLifecycleOwner) {
+            setButtonImage(it)
+            bindMenuList(it)
+        }
     }
 
     private fun getCategoryData() {
@@ -86,18 +92,28 @@ class HomeFragment : Fragment() {
 
     private fun setupRecyclerViews() {
         binding.layoutCategory.rvCategory.adapter = categoryAdapter
+        bindAdapterMenu()
+    }
 
+    private fun bindMenuList(isUsingGrid : Boolean) {
+        val columnCount = if (isUsingGrid) 2 else 1
+        val listType = if (isUsingGrid) MenuAdapter.MODE_GRID else MenuAdapter.MODE_LIST
+
+        gridLayoutManager = GridLayoutManager(requireContext(), columnCount)
+        binding.layoutMenuHome.rvMenu.adapter = menuAdapter
+        binding.layoutMenuHome.rvMenu.layoutManager = gridLayoutManager
+        menuAdapter.listMode = listType
+        menuAdapter.notifyDataSetChanged()
+    }
+    private fun bindAdapterMenu(){
+        val listType = if (viewModel.isUsingGrid.value == true) MenuAdapter.MODE_GRID else MenuAdapter.MODE_LIST
         menuAdapter = MenuAdapter(object : MenuAdapter.OnItemClickedListener<Menu> {
             override fun onItemClicked(item: Menu) {
                 navigateToDetail(item)
             }
-        }, if (isUsingGridMode) MenuAdapter.MODE_GRID else MenuAdapter.MODE_LIST)
-        binding.layoutMenuHome.rvMenu.adapter = menuAdapter
-
-        val columnCount = if (isUsingGridMode) 2 else 1
-        gridLayoutManager = GridLayoutManager(requireContext(), columnCount)
-        binding.layoutMenuHome.rvMenu.layoutManager = gridLayoutManager
+        }, listType)
     }
+
 
     private fun bindCategory(data: List<Category>) {
         categoryAdapter.submitData(data)
@@ -109,11 +125,12 @@ class HomeFragment : Fragment() {
 
     private fun setClickAction() {
         binding.btnChangeListMode.setOnClickListener {
-            isUsingGridMode = !isUsingGridMode
-            setButtonImage(isUsingGridMode)
-            val columnCount = if (isUsingGridMode) 2 else 1
-            gridLayoutManager?.spanCount = columnCount
+            changeListMode()
         }
+    }
+
+    private fun changeListMode() {
+        viewModel.changeGridMode()
     }
 
     private fun setButtonImage(usingGridMode: Boolean) {
