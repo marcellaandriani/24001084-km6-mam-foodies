@@ -18,6 +18,7 @@ import com.example.foodiesapp.data.model.Category
 import com.example.foodiesapp.data.model.Menu
 import com.example.foodiesapp.data.repository.CategoryRepositoryImpl
 import com.example.foodiesapp.data.repository.MenuRepositoryImpl
+import com.example.foodiesapp.data.source.local.pref.UserPreferenceImpl
 import com.example.foodiesapp.data.source.network.service.FoodiesApiService
 import com.example.foodiesapp.databinding.FragmentHomeBinding
 import com.example.foodiesapp.presentation.detailfood.DetailFoodActivity
@@ -37,7 +38,7 @@ class HomeFragment : Fragment() {
         val menuRepository = MenuRepositoryImpl(menuDataSource)
         val categoryDataSource: CategoryDataSource = CategoryApiDataSource(service)
         val categoryRepository = CategoryRepositoryImpl(categoryDataSource)
-        GenericViewModelFactory.create(HomeViewModel(categoryRepository, menuRepository))
+        GenericViewModelFactory.create(HomeViewModel(categoryRepository, menuRepository, UserPreferenceImpl(requireContext())))
     }
 
     private val categoryAdapter: CategoryAdapter by lazy {
@@ -105,6 +106,7 @@ class HomeFragment : Fragment() {
         menuAdapter.listMode = listType
         menuAdapter.notifyDataSetChanged()
     }
+
     private fun bindAdapterMenu(){
         val listType = if (viewModel.isUsingGrid.value == true) MenuAdapter.MODE_GRID else MenuAdapter.MODE_LIST
         menuAdapter = MenuAdapter(object : MenuAdapter.OnItemClickedListener<Menu> {
@@ -113,7 +115,6 @@ class HomeFragment : Fragment() {
             }
         }, listType)
     }
-
 
     private fun bindCategory(data: List<Category>) {
         categoryAdapter.submitData(data)

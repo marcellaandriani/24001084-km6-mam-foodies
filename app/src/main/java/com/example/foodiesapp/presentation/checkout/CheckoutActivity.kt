@@ -7,8 +7,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
@@ -21,13 +20,18 @@ import com.example.foodiesapp.data.datasource.auth.AuthDataSource
 import com.example.foodiesapp.data.datasource.auth.FirebaseAuthDataSource
 import com.example.foodiesapp.data.datasource.cart.CartDataSource
 import com.example.foodiesapp.data.datasource.cart.CartDatabaseDataSource
+import com.example.foodiesapp.data.datasource.menu.MenuApiDataSource
+import com.example.foodiesapp.data.datasource.menu.MenuDataSource
 import com.example.foodiesapp.data.repository.CartRepository
 import com.example.foodiesapp.data.repository.CartRepositoryImpl
+import com.example.foodiesapp.data.repository.MenuRepository
+import com.example.foodiesapp.data.repository.MenuRepositoryImpl
 import com.example.foodiesapp.data.repository.UserRepository
 import com.example.foodiesapp.data.repository.UserRepositoryImpl
 import com.example.foodiesapp.data.source.local.database.AppDatabase
 import com.example.foodiesapp.data.source.network.firebase.FirebaseService
 import com.example.foodiesapp.data.source.network.firebase.FirebaseServiceImpl
+import com.example.foodiesapp.data.source.network.service.FoodiesApiService
 import com.example.foodiesapp.databinding.ActivityCheckoutBinding
 import com.example.foodiesapp.presentation.cart.CartViewModel
 import com.example.foodiesapp.presentation.checkout.adapter.PriceListAdapter
@@ -43,19 +47,23 @@ class CheckoutActivity : AppCompatActivity() {
         ActivityCheckoutBinding.inflate(layoutInflater)
     }
 
+
     private val viewModel: CheckoutViewModel by viewModels {
-        val service: FirebaseService = FirebaseServiceImpl()
-        val firebaseDataSource: AuthDataSource = FirebaseAuthDataSource(service)
+        val foodiesApiService = FoodiesApiService.invoke()
+        val menuDataSource: MenuDataSource = MenuApiDataSource(foodiesApiService)
+        val menuRepository = MenuRepositoryImpl(menuDataSource)
+        val firebaseService: FirebaseService = FirebaseServiceImpl()
+        val firebaseDataSource: AuthDataSource = FirebaseAuthDataSource(firebaseService)
         val firebaseRepository: UserRepository = UserRepositoryImpl(firebaseDataSource)
         val database = AppDatabase.getInstance(this)
-        val dataSource: CartDataSource = CartDatabaseDataSource(database.cartDao())
-        val cartRepository: CartRepository = CartRepositoryImpl(dataSource)
-        GenericViewModelFactory.create(CheckoutViewModel(cartRepository, firebaseRepository))
-    }
+        val cartDataSource: CartDataSource = CartDatabaseDataSource(database.cartDao())
+        val cartRepository: CartRepository = CartRepositoryImpl(cartDataSource)
+        GenericViewModelFactory.create(CheckoutViewModel(cartRepository, firebaseRepository, menuRepository)) }
 
     private val adapter: CartListAdapter by lazy {
         CartListAdapter()
     }
+
     private val priceItemAdapter: PriceListAdapter by lazy {
         PriceListAdapter {
         }
@@ -72,8 +80,28 @@ class CheckoutActivity : AppCompatActivity() {
     private fun setClickListeners() {
         binding.btnCheckout.setOnClickListener {
             if (viewModel.isLoggedIn()) {
-                viewModel.deleteAllCart()
-                showSuccessDialog()
+                viewModel.checkoutCart().observe(this) {
+                    it.proceedWhen(
+                        doOnSuccess = {
+                            showSuccessDialog()
+                        },
+                        doOnLoading = {
+                            binding.layoutState.root.isVisible = true
+                            binding.layoutState.pbLoading.isVisible = true
+                            binding.layoutState.tvError.isVisible = false
+                            binding.layoutContent.root.isVisible = false
+                            binding.layoutContent.rvCart.isVisible = false
+
+                        },
+                        doOnError = {
+                            Toast.makeText(
+                                this,
+                                getString(R.string.error_checkout),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    )
+                }
             } else {
                 navigateToLogin()
             }
@@ -103,7 +131,6 @@ class CheckoutActivity : AppCompatActivity() {
         }
 
         dialog.show()
-
     }
 
     private fun navigateToLogin() {
@@ -117,45 +144,50 @@ class CheckoutActivity : AppCompatActivity() {
 
     private fun observeData() {
         viewModel.checkoutData.observe(this) { result ->
-            result.proceedWhen(doOnSuccess = {
-                binding.layoutState.root.isVisible = false
-                binding.layoutState.pbLoading.isVisible = false
-                binding.layoutState.tvError.isVisible = false
-                binding.layoutContent.root.isVisible = true
-                binding.layoutContent.rvCart.isVisible = true
-                binding.cvSectionOrder.isVisible = true
-                result.payload?.let { (carts, priceItems, totalPrice) ->
-                    adapter.submitData(carts)
-                    binding.tvTotalPrice.text = totalPrice.toIndonesianFormat()
-                    priceItemAdapter.submitData(priceItems)
+            result.proceedWhen(
+                doOnSuccess = { data ->
+                    binding.layoutState.root.isVisible = false
+                    binding.layoutState.pbLoading.isVisible = false
+                    binding.layoutState.tvError.isVisible = false
+                    binding.layoutContent.root.isVisible = true
+                    binding.layoutContent.rvCart.isVisible = true
+                    binding.cvSectionOrder.isVisible = true
+                    data.payload?.let { (carts, priceItems, totalPrice) ->
+                        adapter.submitData(carts)
+                        binding.tvTotalPrice.text = totalPrice.toIndonesianFormat()
+                        priceItemAdapter.submitData(priceItems)
+                    }
+                },
+                doOnLoading = {
+                    binding.layoutState.root.isVisible = true
+                    binding.layoutState.pbLoading.isVisible = true
+                    binding.layoutState.tvError.isVisible = false
+                    binding.layoutContent.root.isVisible = false
+                    binding.layoutContent.rvCart.isVisible = false
+                    binding.cvSectionOrder.isVisible = false
+                },
+                doOnError = { error ->
+                    binding.layoutState.root.isVisible = true
+                    binding.layoutState.pbLoading.isVisible = false
+                    binding.layoutState.tvError.isVisible = true
+                    binding.layoutState.tvError.text = error.message.orEmpty()
+                    binding.layoutContent.root.isVisible = false
+                    binding.layoutContent.rvCart.isVisible = false
+                    binding.cvSectionOrder.isVisible = false
+                },
+                doOnEmpty = { data ->
+                    binding.layoutState.root.isVisible = true
+                    binding.layoutState.pbLoading.isVisible = false
+                    binding.layoutState.tvError.isVisible = true
+                    binding.layoutState.tvError.text = getString(R.string.text_cart_is_empty)
+                    data.payload?.let { (_, _, totalPrice) ->
+                        binding.tvTotalPrice.text = totalPrice.toIndonesianFormat()
+                    }
+                    binding.layoutContent.root.isVisible = false
+                    binding.layoutContent.rvCart.isVisible = false
+                    binding.cvSectionOrder.isVisible = false
                 }
-            }, doOnLoading = {
-                binding.layoutState.root.isVisible = true
-                binding.layoutState.pbLoading.isVisible = true
-                binding.layoutState.tvError.isVisible = false
-                binding.layoutContent.root.isVisible = false
-                binding.layoutContent.rvCart.isVisible = false
-                binding.cvSectionOrder.isVisible = false
-            }, doOnError = {
-                binding.layoutState.root.isVisible = true
-                binding.layoutState.pbLoading.isVisible = false
-                binding.layoutState.tvError.isVisible = true
-                binding.layoutState.tvError.text = result.exception?.message.orEmpty()
-                binding.layoutContent.root.isVisible = false
-                binding.layoutContent.rvCart.isVisible = false
-                binding.cvSectionOrder.isVisible = false
-            }, doOnEmpty = { data ->
-                binding.layoutState.root.isVisible = true
-                binding.layoutState.pbLoading.isVisible = false
-                binding.layoutState.tvError.isVisible = true
-                binding.layoutState.tvError.text = getString(R.string.text_cart_is_empty)
-                data.payload?.let { (_, _, totalPrice) ->
-                    binding.tvTotalPrice.text = totalPrice.toIndonesianFormat()
-                }
-                binding.layoutContent.root.isVisible = false
-                binding.layoutContent.rvCart.isVisible = false
-                binding.cvSectionOrder.isVisible = false
-            })
+            )
         }
     }
 }
