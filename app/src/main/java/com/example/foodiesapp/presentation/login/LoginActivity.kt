@@ -47,7 +47,7 @@ class LoginActivity : AppCompatActivity() {
         binding.layoutFormLogin.btnLogin.setOnClickListener {
             inputLogin()
         }
-        binding.layoutFormLogin.tvNavToRegister.highLightWord("Register Here"){
+        binding.layoutFormLogin.tvNavToRegister.setOnClickListener{
             navigateRegister()
         }
     }

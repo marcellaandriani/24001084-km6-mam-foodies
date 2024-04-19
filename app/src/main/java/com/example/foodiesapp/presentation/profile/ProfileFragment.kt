@@ -20,6 +20,8 @@ import com.example.foodiesapp.data.source.network.firebase.FirebaseServiceImpl
 import com.example.foodiesapp.databinding.FragmentProfileBinding
 import com.example.foodiesapp.presentation.login.LoginActivity
 import com.example.foodiesapp.utils.GenericViewModelFactory
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 class ProfileFragment : Fragment() {
 
@@ -48,6 +50,10 @@ class ProfileFragment : Fragment() {
     }
 
     private fun observeProfileData() {
+        viewModel.getCurrentUser()?.let { user ->
+            binding.etUsername.setText(user.username)
+            binding.etEmail.setText(user.email)
+        }
         viewModel.profileData.observe(viewLifecycleOwner) { profile ->
             profile?.let {
                 binding.profileImageView.load(it.profileImg) {
@@ -55,13 +61,10 @@ class ProfileFragment : Fragment() {
                     error(R.drawable.ic_tab_profile)
                     transformations(CircleCropTransformation())
                 }
-                binding.etUsername.setText(it.username)
-                binding.etPassword.setText(it.password)
-                binding.etEmail.setText(it.email)
-                binding.etTelephone.setText(it.telephone)
             }
         }
     }
+
 
     private fun setClickListener() {
         binding.ivEdit.setOnClickListener {
@@ -79,9 +82,7 @@ class ProfileFragment : Fragment() {
         viewModel.isEditMode.observe(viewLifecycleOwner){ isEditMode ->
             isEditMode?.let {
                 binding.etUsername.isEnabled = it
-                binding.etPassword.isEnabled = it
                 binding.etEmail.isEnabled = it
-                binding.etTelephone.isEnabled = it
             }
         }
     }
