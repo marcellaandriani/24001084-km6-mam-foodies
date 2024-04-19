@@ -13,11 +13,10 @@ class ProfileViewModel(private val repository: UserRepository) : ViewModel() {
 
     init {
         profileData.value = Profile(
-            username = "Marcella Andriani Mahadewi",
-            email = "marcellaadr22@gmail.com",
-            password = "jajanterus",
-            telephone = "0812345678910",
-            profileImg = "https://avatars.githubusercontent.com/u/136700786?v=4"
+            username = "",
+            email = "",
+            password = "",
+            profileImg = "https://i.pinimg.com/474x/a7/c8/16/a7c8160be69a3135f496df24290d000f.jpg"
         )
     }
 
@@ -33,4 +32,6 @@ class ProfileViewModel(private val repository: UserRepository) : ViewModel() {
     fun doLogout() {
         repository.doLogout()
     }
+    fun getCurrentUser() = repository.getCurrentUser()
+
 }

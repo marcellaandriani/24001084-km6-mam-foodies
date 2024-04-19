@@ -55,30 +55,10 @@
             android:drawablePadding="8dp"
             android:enabled="false"
             android:hint="@string/hint_username"
-            android:text="@string/text_et_username" />
+            tools:text ="@string/text_et_username" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_password"
-        android:layout_marginTop="32dp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/til_username">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_lock"
-            android:drawablePadding="8dp"
-            android:enabled="false"
-            android:hint="@string/hint_password"
-            android:text="@string/text_et_password" />
-
-    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_email"
@@ -87,7 +67,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/til_password">
+        app:layout_constraintTop_toBottomOf="@id/til_username">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/et_email"
@@ -97,28 +77,7 @@
             android:drawablePadding="8dp"
             android:enabled="false"
             android:hint="@string/hint_email"
-            android:text="@string/text_et_email" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_telephone"
-        android:layout_marginTop="32dp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/til_email">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_telephone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_call"
-            android:drawablePadding="8dp"
-            android:enabled="false"
-            android:hint="@string/hint_number_phone"
-            android:text="@string/text_et_number_phone" />
+            tools:text="@string/text_et_email" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -126,11 +85,12 @@
         android:id="@+id/btn_logout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="32dp"
+        android:layout_marginVertical="16dp"
         android:layout_marginHorizontal="16dp"
         android:text="@string/text_btn_logout"
         android:backgroundTint="?attr/colorError"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/til_email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
