@@ -37,6 +37,8 @@ interface FirebaseService {
     fun isLoggedIn(): Boolean
 
     fun getCurrentUser(): FirebaseUser?
+
+
 }
 
 class FirebaseServiceImpl() : FirebaseService{

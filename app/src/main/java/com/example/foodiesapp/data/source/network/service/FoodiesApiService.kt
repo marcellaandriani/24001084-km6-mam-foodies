@@ -2,11 +2,15 @@ package com.example.foodiesapp.data.source.network.service
 
 import com.example.foodiesapp.BuildConfig
 import com.example.foodiesapp.data.source.network.model.category.CategoryResponse
+import com.example.foodiesapp.data.source.network.model.checkout.CheckoutRequestPayload
+import com.example.foodiesapp.data.source.network.model.checkout.CheckoutResponse
 import com.example.foodiesapp.data.source.network.model.menu.MenuResponse
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 import java.util.concurrent.TimeUnit
 
@@ -17,6 +21,9 @@ interface FoodiesApiService {
 
     @GET("listmenu")
     suspend fun getMenus(@Query("c") category: String? = null): MenuResponse
+
+    @POST("order")
+    suspend fun createOrder(@Body payload : CheckoutRequestPayload): CheckoutResponse
 
     companion object {
         @JvmStatic
