@@ -88,6 +88,8 @@
     <string name="text_already_have_an_account_login_here">Already have an account? Login Here</string>
     <string name="text_btn_logout">Logout</string>
     <string name="error_checkout">Pemesanan Gagal</string>
+    <string name="text_change_profile">Change Profile</string>
+    <string name="text_change_password">Change Password</string>
 
 
 </resources>

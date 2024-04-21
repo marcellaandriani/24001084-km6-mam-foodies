@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import coil.load
@@ -45,8 +46,8 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeLoginStatus()
         setClickListener()
-        observeEditMode()
         observeProfileData()
+        observeEditMode()
     }
 
     private fun observeProfileData() {
@@ -70,12 +71,50 @@ class ProfileFragment : Fragment() {
         binding.ivEdit.setOnClickListener {
             viewModel.changeEditMode()
         }
+            binding.btnChangeProfile.setOnClickListener {
+                if (checkNameValidation()) {
+                    changeProfileData()
+                }
+            }
         binding.btnLogout.setOnClickListener{
             viewModel.doLogout()
             navigateToLogin()
             val navController = findNavController()
             navController.navigate(R.id.menu_tab_home)
         }
+        binding.tvChangePwd.setOnClickListener {
+            requestChangePassword()
+            viewModel.doChangePasswordByEmail()
+        }
+
+    }
+
+    private fun requestChangePassword() {
+        val dialog = AlertDialog.Builder(requireContext())
+            .setMessage("Change password request sent to your email Please check to your inbox or spam")
+            .setPositiveButton(
+                "Okay"
+            ) { dialog, id ->
+            }.create()
+        dialog.show()
+    }
+
+    private fun checkNameValidation(): Boolean {
+        val username = binding.etUsername.text.toString().trim()
+        return if (username.isEmpty()) {
+            binding.tilUsername.isErrorEnabled = true
+            binding.tilUsername.error = getString(R.string.text_error_name_cannot_empty)
+            false
+        } else {
+            binding.tilUsername.isErrorEnabled = false
+            true
+        }
+    }
+
+    private fun changeProfileData() {
+        val username = binding.etUsername.text.toString().trim()
+        viewModel.updateUsername(username)
+
     }
 
     private fun observeEditMode() {
@@ -86,7 +125,6 @@ class ProfileFragment : Fragment() {
             }
         }
     }
-
     private fun observeLoginStatus() {
         if (!viewModel.isLoggedIn()) {
             navigateToLogin()
