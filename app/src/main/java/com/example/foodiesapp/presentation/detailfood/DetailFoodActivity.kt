@@ -92,7 +92,8 @@ import com.example.foodiesapp.utils.toIndonesianFormat
     private fun observeData() {
         viewModel.priceLiveData.observe(this) { price ->
             binding.btnAddToCart.isEnabled = price != 0.0
-            binding.btnAddToCart.text = "Tambahkan ke Keranjang - ${price.toIndonesianFormat()}"
+            binding.btnAddToCart.text =
+                getString(R.string.text_tambahkan_ke_keranjang, price.toIndonesianFormat())
         }
         viewModel.menuCountLiveData.observe(this) { count ->
             binding.tvTotal.text = count.toString()
