@@ -1,9 +1,14 @@
 package com.example.foodiesapp.presentation.profile
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.foodiesapp.data.model.Profile
 import com.example.foodiesapp.data.repository.UserRepository
+import com.example.foodiesapp.utils.ResultWrapper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ProfileViewModel(private val repository: UserRepository) : ViewModel() {
 
@@ -23,6 +28,22 @@ class ProfileViewModel(private val repository: UserRepository) : ViewModel() {
     fun changeEditMode() {
         val currentValue = isEditMode.value ?: false
         isEditMode.postValue(!currentValue)
+    }
+
+    fun updateUsername(username: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.updateProfile(username = username).collect {
+                _changeProfileResult.postValue(it)
+            }
+        }
+    }
+
+    private val _changeProfileResult = MutableLiveData<ResultWrapper<Boolean>>()
+    val changeProfileResult: LiveData<ResultWrapper<Boolean>>
+        get() = _changeProfileResult
+
+    fun doChangePasswordByEmail(): Boolean {
+        return repository.requestChangePasswordByEmail()
     }
 
     fun isLoggedIn(): Boolean {
