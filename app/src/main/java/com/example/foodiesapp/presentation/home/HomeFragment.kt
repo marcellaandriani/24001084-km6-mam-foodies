@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.foodiesapp.R
+import com.example.foodiesapp.data.datasource.auth.AuthDataSource
+import com.example.foodiesapp.data.datasource.auth.FirebaseAuthDataSource
 import com.example.foodiesapp.data.datasource.category.CategoryApiDataSource
 import com.example.foodiesapp.data.datasource.category.CategoryDataSource
 import com.example.foodiesapp.data.datasource.menu.MenuApiDataSource
@@ -18,7 +20,11 @@ import com.example.foodiesapp.data.model.Category
 import com.example.foodiesapp.data.model.Menu
 import com.example.foodiesapp.data.repository.CategoryRepositoryImpl
 import com.example.foodiesapp.data.repository.MenuRepositoryImpl
+import com.example.foodiesapp.data.repository.UserRepository
+import com.example.foodiesapp.data.repository.UserRepositoryImpl
 import com.example.foodiesapp.data.source.local.pref.UserPreferenceImpl
+import com.example.foodiesapp.data.source.network.firebase.FirebaseService
+import com.example.foodiesapp.data.source.network.firebase.FirebaseServiceImpl
 import com.example.foodiesapp.data.source.network.service.FoodiesApiService
 import com.example.foodiesapp.databinding.FragmentHomeBinding
 import com.example.foodiesapp.presentation.detailfood.DetailFoodActivity
@@ -125,7 +131,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setClickAction() {
-        binding.btnChangeListMode.setOnClickListener {
+        binding.layoutMenuHome.btnChangeListMode.setOnClickListener {
             changeListMode()
         }
     }
@@ -136,7 +142,7 @@ class HomeFragment : Fragment() {
 
     private fun setButtonImage(usingGridMode: Boolean) {
         val iconResId = if (usingGridMode) R.drawable.ic_grid else R.drawable.ic_list
-        binding.btnChangeListMode.setCompoundDrawablesWithIntrinsicBounds(iconResId, 0, 0, 0)
+        binding.layoutMenuHome.btnChangeListMode.setCompoundDrawablesWithIntrinsicBounds(iconResId, 0, 0, 0)
     }
 
     private fun navigateToDetail(item: Menu) {

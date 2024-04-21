@@ -90,6 +90,8 @@
     <string name="error_checkout">Pemesanan Gagal</string>
     <string name="text_change_profile">Change Profile</string>
     <string name="text_change_password">Change Password</string>
+    <string name="text_greetings">Hi, Welcome!</string>
+    <string name="text_search_bar">Buy now for special price</string>
 
 
 </resources>

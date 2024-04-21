@@ -51,17 +51,6 @@
                 android:layout_margin="16dp"
                 app:layout_constraintTop_toBottomOf="@id/layout_category"/>
 
-            <Button
-                android:id="@+id/btn_change_list_mode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                style="@style/ToggleButton"
-                android:layout_marginTop="8dp"
-                android:layout_margin="16dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/banner_menu"/>
-
             <include
                 android:id="@+id/layout_menu_home"
                 layout="@layout/layout_menu"
@@ -73,7 +62,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btn_change_list_mode" />
+                app:layout_constraintTop_toBottomOf="@id/banner_menu" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
