@@ -5,47 +5,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.foodiesapp.R
-import com.example.foodiesapp.data.datasource.auth.AuthDataSource
-import com.example.foodiesapp.data.datasource.auth.FirebaseAuthDataSource
-import com.example.foodiesapp.data.datasource.category.CategoryApiDataSource
-import com.example.foodiesapp.data.datasource.category.CategoryDataSource
-import com.example.foodiesapp.data.datasource.menu.MenuApiDataSource
-import com.example.foodiesapp.data.datasource.menu.MenuDataSource
 import com.example.foodiesapp.data.model.Category
 import com.example.foodiesapp.data.model.Menu
-import com.example.foodiesapp.data.repository.CategoryRepositoryImpl
-import com.example.foodiesapp.data.repository.MenuRepositoryImpl
-import com.example.foodiesapp.data.repository.UserRepository
-import com.example.foodiesapp.data.repository.UserRepositoryImpl
-import com.example.foodiesapp.data.source.local.pref.UserPreferenceImpl
-import com.example.foodiesapp.data.source.network.firebase.FirebaseService
-import com.example.foodiesapp.data.source.network.firebase.FirebaseServiceImpl
-import com.example.foodiesapp.data.source.network.service.FoodiesApiService
 import com.example.foodiesapp.databinding.FragmentHomeBinding
 import com.example.foodiesapp.presentation.detailfood.DetailFoodActivity
 import com.example.foodiesapp.presentation.home.adapter.CategoryAdapter
 import com.example.foodiesapp.presentation.home.adapter.MenuAdapter
-import com.example.foodiesapp.utils.GenericViewModelFactory
 import com.example.foodiesapp.utils.proceedWhen
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private lateinit var menuAdapter: MenuAdapter
     private var gridLayoutManager: GridLayoutManager? = null
 
-    private val viewModel: HomeViewModel by viewModels {
-        val service = FoodiesApiService.invoke()
-        val menuDataSource: MenuDataSource = MenuApiDataSource(service)
-        val menuRepository = MenuRepositoryImpl(menuDataSource)
-        val categoryDataSource: CategoryDataSource = CategoryApiDataSource(service)
-        val categoryRepository = CategoryRepositoryImpl(categoryDataSource)
-        GenericViewModelFactory.create(HomeViewModel(categoryRepository, menuRepository, UserPreferenceImpl(requireContext())))
-    }
+    private val homeViewModel: HomeViewModel by viewModel()
 
     private val categoryAdapter: CategoryAdapter by lazy {
         CategoryAdapter {
@@ -71,14 +48,14 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeGridMode() {
-        viewModel.isUsingGrid.observe(viewLifecycleOwner) {
+        homeViewModel.isUsingGrid.observe(viewLifecycleOwner) {
             setButtonImage(it)
             bindMenuList(it)
         }
     }
 
     private fun getCategoryData() {
-        viewModel.getCategories().observe(viewLifecycleOwner) {
+        homeViewModel.getCategories().observe(viewLifecycleOwner) {
             it.proceedWhen(
                 doOnSuccess = {
                     it.payload?.let { data -> bindCategory(data) }
@@ -88,7 +65,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun getMenuData(category: String? = null) {
-        viewModel.getMenus(category).observe(viewLifecycleOwner) {
+        homeViewModel.getMenus(category).observe(viewLifecycleOwner) {
             it.proceedWhen(
                 doOnSuccess = {
                     it.payload?.let { data -> bindMenu(data) }
@@ -114,7 +91,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun bindAdapterMenu(){
-        val listType = if (viewModel.isUsingGrid.value == true) MenuAdapter.MODE_GRID else MenuAdapter.MODE_LIST
+        val listType = if (homeViewModel.isUsingGrid.value == true) MenuAdapter.MODE_GRID else MenuAdapter.MODE_LIST
         menuAdapter = MenuAdapter(object : MenuAdapter.OnItemClickedListener<Menu> {
             override fun onItemClicked(item: Menu) {
                 navigateToDetail(item)
@@ -137,7 +114,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun changeListMode() {
-        viewModel.changeGridMode()
+        homeViewModel.changeGridMode()
     }
 
     private fun setButtonImage(usingGridMode: Boolean) {

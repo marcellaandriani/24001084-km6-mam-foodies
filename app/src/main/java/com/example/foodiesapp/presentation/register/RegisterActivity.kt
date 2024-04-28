@@ -4,35 +4,23 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.foodiesapp.R
-import com.example.foodiesapp.data.datasource.auth.AuthDataSource
-import com.example.foodiesapp.data.datasource.auth.FirebaseAuthDataSource
-import com.example.foodiesapp.data.repository.UserRepository
-import com.example.foodiesapp.data.repository.UserRepositoryImpl
-import com.example.foodiesapp.data.source.network.firebase.FirebaseService
-import com.example.foodiesapp.data.source.network.firebase.FirebaseServiceImpl
 import com.example.foodiesapp.databinding.ActivityRegisterBinding
 import com.example.foodiesapp.presentation.login.LoginActivity
 import com.example.foodiesapp.presentation.main.MainActivity
-import com.example.foodiesapp.utils.GenericViewModelFactory
 import com.example.foodiesapp.utils.highLightWord
 import com.example.foodiesapp.utils.proceedWhen
 import com.google.android.material.textfield.TextInputLayout
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class RegisterActivity : AppCompatActivity(){
     private val binding: ActivityRegisterBinding by lazy {
         ActivityRegisterBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: RegisterViewModel by viewModels {
-        val s: FirebaseService = FirebaseServiceImpl()
-        val ds: AuthDataSource = FirebaseAuthDataSource(s)
-        val r: UserRepository = UserRepositoryImpl(ds)
-        GenericViewModelFactory.create(RegisterViewModel(r))
-    }
+    private val registerViewModel: RegisterViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -72,7 +60,7 @@ class RegisterActivity : AppCompatActivity(){
         email: String,
         numberPhone: String
     ) {
-        viewModel.doRegister(username, password, email, numberPhone).observe(this) {
+        registerViewModel.doRegister(username, password, email, numberPhone).observe(this) {
             it.proceedWhen(
                 doOnSuccess = {
                     binding.pbLoading.isVisible = false

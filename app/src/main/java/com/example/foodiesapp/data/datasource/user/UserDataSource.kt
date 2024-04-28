@@ -7,7 +7,7 @@ interface UserDataSource {
     suspend fun setUsingGridMode(isUsingGridMode: Boolean)
 }
 
-class UserPreferenceImpl(private val userPreference: UserPreference) : UserDataSource {
+class UserDataSourceImpl(private val userPreference: UserPreference) : UserDataSource {
 
     override suspend fun isUsingGridMode(): Boolean {
         return userPreference.isUsingGridMode()

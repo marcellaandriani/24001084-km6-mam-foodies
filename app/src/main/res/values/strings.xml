@@ -94,6 +94,7 @@
     <string name="text_search_bar">Buy now for special price</string>
     <string name="text_add_to_cart">Masukkan ke Keranjang</string>
     <string name="text_tambahkan_ke_keranjang">Tambahkan ke Keranjang - %1$s</string>
+    <string name="message_request_change_password">Change password request sent to your email Please check to your inbox or spam</string>
 
 
 </resources>
