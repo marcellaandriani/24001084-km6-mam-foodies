@@ -8,38 +8,16 @@ import android.view.Window
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
 import com.example.foodiesapp.R
-import com.example.foodiesapp.data.datasource.auth.AuthDataSource
-import com.example.foodiesapp.data.datasource.auth.FirebaseAuthDataSource
-import com.example.foodiesapp.data.datasource.cart.CartDataSource
-import com.example.foodiesapp.data.datasource.cart.CartDatabaseDataSource
-import com.example.foodiesapp.data.datasource.menu.MenuApiDataSource
-import com.example.foodiesapp.data.datasource.menu.MenuDataSource
-import com.example.foodiesapp.data.repository.CartRepository
-import com.example.foodiesapp.data.repository.CartRepositoryImpl
-import com.example.foodiesapp.data.repository.MenuRepository
-import com.example.foodiesapp.data.repository.MenuRepositoryImpl
-import com.example.foodiesapp.data.repository.UserRepository
-import com.example.foodiesapp.data.repository.UserRepositoryImpl
-import com.example.foodiesapp.data.source.local.database.AppDatabase
-import com.example.foodiesapp.data.source.network.firebase.FirebaseService
-import com.example.foodiesapp.data.source.network.firebase.FirebaseServiceImpl
-import com.example.foodiesapp.data.source.network.service.FoodiesApiService
 import com.example.foodiesapp.databinding.ActivityCheckoutBinding
-import com.example.foodiesapp.presentation.cart.CartViewModel
 import com.example.foodiesapp.presentation.checkout.adapter.PriceListAdapter
 import com.example.foodiesapp.presentation.common.adapter.CartListAdapter
 import com.example.foodiesapp.presentation.login.LoginActivity
-import com.example.foodiesapp.utils.GenericViewModelFactory
 import com.example.foodiesapp.utils.proceedWhen
 import com.example.foodiesapp.utils.toIndonesianFormat
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CheckoutActivity : AppCompatActivity() {
 
@@ -48,17 +26,7 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
 
-    private val viewModel: CheckoutViewModel by viewModels {
-        val foodiesApiService = FoodiesApiService.invoke()
-        val menuDataSource: MenuDataSource = MenuApiDataSource(foodiesApiService)
-        val menuRepository = MenuRepositoryImpl(menuDataSource)
-        val firebaseService: FirebaseService = FirebaseServiceImpl()
-        val firebaseDataSource: AuthDataSource = FirebaseAuthDataSource(firebaseService)
-        val firebaseRepository: UserRepository = UserRepositoryImpl(firebaseDataSource)
-        val database = AppDatabase.getInstance(this)
-        val cartDataSource: CartDataSource = CartDatabaseDataSource(database.cartDao())
-        val cartRepository: CartRepository = CartRepositoryImpl(cartDataSource)
-        GenericViewModelFactory.create(CheckoutViewModel(cartRepository, firebaseRepository, menuRepository)) }
+    private val checkoutViewModel: CheckoutViewModel by viewModel()
 
     private val adapter: CartListAdapter by lazy {
         CartListAdapter()
@@ -79,8 +47,8 @@ class CheckoutActivity : AppCompatActivity() {
 
     private fun setClickListeners() {
         binding.btnCheckout.setOnClickListener {
-            if (viewModel.isLoggedIn()) {
-                viewModel.checkoutCart().observe(this) {
+            if (checkoutViewModel.isLoggedIn()) {
+                checkoutViewModel.checkoutCart().observe(this) {
                     it.proceedWhen(
                         doOnSuccess = {
                             showSuccessDialog()
@@ -125,7 +93,7 @@ class CheckoutActivity : AppCompatActivity() {
         ivSuccess.setImageResource(R.drawable.ic_payment_success)
         closeBtn.setOnClickListener {
             dialog.dismiss()
-            viewModel.deleteAllCart()
+            checkoutViewModel.deleteAllCart()
             onBackPressed()
             finish()
         }
@@ -143,7 +111,7 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun observeData() {
-        viewModel.checkoutData.observe(this) { result ->
+        checkoutViewModel.checkoutData.observe(this) { result ->
             result.proceedWhen(
                 doOnSuccess = { data ->
                     binding.layoutState.root.isVisible = false

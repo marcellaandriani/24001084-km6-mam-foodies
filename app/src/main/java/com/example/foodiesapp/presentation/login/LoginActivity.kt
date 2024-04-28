@@ -2,26 +2,14 @@ package com.example.foodiesapp.presentation.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Patterns
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.example.foodiesapp.R
-import com.example.foodiesapp.data.datasource.auth.AuthDataSource
-import com.example.foodiesapp.data.datasource.auth.FirebaseAuthDataSource
-import com.example.foodiesapp.data.repository.UserRepository
-import com.example.foodiesapp.data.repository.UserRepositoryImpl
-import com.example.foodiesapp.data.source.network.firebase.FirebaseService
-import com.example.foodiesapp.data.source.network.firebase.FirebaseServiceImpl
 import com.example.foodiesapp.databinding.ActivityLoginBinding
 import com.example.foodiesapp.presentation.main.MainActivity
 import com.example.foodiesapp.presentation.register.RegisterActivity
-import com.example.foodiesapp.presentation.register.RegisterViewModel
-import com.example.foodiesapp.utils.GenericViewModelFactory
-import com.example.foodiesapp.utils.highLightWord
 import com.example.foodiesapp.utils.proceedWhen
-import com.google.android.material.textfield.TextInputLayout
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
 
@@ -29,12 +17,7 @@ class LoginActivity : AppCompatActivity() {
         ActivityLoginBinding.inflate(layoutInflater)
     }
 
-    private val viewModel: LoginViewModel by viewModels {
-        val service: FirebaseService = FirebaseServiceImpl()
-        val dataSource: AuthDataSource = FirebaseAuthDataSource(service)
-        val repository: UserRepository = UserRepositoryImpl(dataSource)
-        GenericViewModelFactory.create(LoginViewModel(repository))
-    }
+    private val loginViewModel: LoginViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +42,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun doLogin(email: String, password: String) {
-        viewModel.doLogin(email, password).observe(this){result ->
+        loginViewModel.doLogin(email, password).observe(this){ result ->
             result.proceedWhen(
                 doOnSuccess = {
                     binding.layoutFormLogin.pbLogin.isVisible = false

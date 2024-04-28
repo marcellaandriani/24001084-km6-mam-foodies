@@ -7,32 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.example.foodiesapp.R
-import com.example.foodiesapp.data.datasource.auth.AuthDataSource
-import com.example.foodiesapp.data.datasource.auth.FirebaseAuthDataSource
-import com.example.foodiesapp.data.repository.UserRepository
-import com.example.foodiesapp.data.repository.UserRepositoryImpl
-import com.example.foodiesapp.data.source.network.firebase.FirebaseService
-import com.example.foodiesapp.data.source.network.firebase.FirebaseServiceImpl
 import com.example.foodiesapp.databinding.FragmentProfileBinding
 import com.example.foodiesapp.presentation.login.LoginActivity
-import com.example.foodiesapp.utils.GenericViewModelFactory
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
-    private val viewModel: ProfileViewModel by viewModels{
-        val service: FirebaseService = FirebaseServiceImpl()
-        val dataSource: AuthDataSource = FirebaseAuthDataSource(service)
-        val repository: UserRepository = UserRepositoryImpl(dataSource)
-        GenericViewModelFactory.create(ProfileViewModel(repository))
-    }
+    private val profileViewModel: ProfileViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,11 +37,11 @@ class ProfileFragment : Fragment() {
     }
 
     private fun observeProfileData() {
-        viewModel.getCurrentUser()?.let { user ->
+        profileViewModel.getCurrentUser()?.let { user ->
             binding.etUsername.setText(user.username)
             binding.etEmail.setText(user.email)
         }
-        viewModel.profileData.observe(viewLifecycleOwner) { profile ->
+        profileViewModel.profileData.observe(viewLifecycleOwner) { profile ->
             profile?.let {
                 binding.profileImageView.load(it.profileImg) {
                     crossfade(true)
@@ -69,7 +55,7 @@ class ProfileFragment : Fragment() {
 
     private fun setClickListener() {
         binding.ivEdit.setOnClickListener {
-            viewModel.changeEditMode()
+            profileViewModel.changeEditMode()
         }
             binding.btnChangeProfile.setOnClickListener {
                 if (checkNameValidation()) {
@@ -77,21 +63,21 @@ class ProfileFragment : Fragment() {
                 }
             }
         binding.btnLogout.setOnClickListener{
-            viewModel.doLogout()
+            profileViewModel.doLogout()
             navigateToLogin()
             val navController = findNavController()
             navController.navigate(R.id.menu_tab_home)
         }
         binding.tvChangePwd.setOnClickListener {
             requestChangePassword()
-            viewModel.doChangePasswordByEmail()
+            profileViewModel.doChangePasswordByEmail()
         }
 
     }
 
     private fun requestChangePassword() {
         val dialog = AlertDialog.Builder(requireContext())
-            .setMessage("Change password request sent to your email Please check to your inbox or spam")
+            .setMessage(getString(R.string.message_request_change_password))
             .setPositiveButton(
                 "Okay"
             ) { dialog, id ->
@@ -113,12 +99,12 @@ class ProfileFragment : Fragment() {
 
     private fun changeProfileData() {
         val username = binding.etUsername.text.toString().trim()
-        viewModel.updateUsername(username)
+        profileViewModel.updateUsername(username)
 
     }
 
     private fun observeEditMode() {
-        viewModel.isEditMode.observe(viewLifecycleOwner){ isEditMode ->
+        profileViewModel.isEditMode.observe(viewLifecycleOwner){ isEditMode ->
             isEditMode?.let {
                 binding.etUsername.isEnabled = it
                 binding.etEmail.isEnabled = it
@@ -126,7 +112,7 @@ class ProfileFragment : Fragment() {
         }
     }
     private fun observeLoginStatus() {
-        if (!viewModel.isLoggedIn()) {
+        if (!profileViewModel.isLoggedIn()) {
             navigateToLogin()
         }
     }

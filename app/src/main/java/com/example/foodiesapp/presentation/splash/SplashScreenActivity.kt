@@ -24,7 +24,7 @@ class SplashScreenActivity : AppCompatActivity() {
         lifecycleScope.launch {
             delay(2000)
             navigateToMain()
-            finish() // Menutup SplashScreenActivity setelah pindah ke Menu Home
+            finish()
         }
     }
 

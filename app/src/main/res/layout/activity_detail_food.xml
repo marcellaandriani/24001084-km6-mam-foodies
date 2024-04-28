@@ -186,6 +186,18 @@
                 android:layout_marginTop="14dp"
                 android:backgroundTint="@color/md_theme_light_error"/>
 
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/pb_loading"
+                android:layout_width="1dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@id/btnAddToCart"
+                app:layout_constraintEnd_toEndOf="@id/btnAddToCart"
+                app:layout_constraintStart_toStartOf="@id/btnAddToCart"
+                app:layout_constraintTop_toTopOf="@id/btnAddToCart" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
