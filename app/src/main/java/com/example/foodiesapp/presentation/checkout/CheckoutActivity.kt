@@ -20,11 +20,9 @@ import com.example.foodiesapp.utils.toIndonesianFormat
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CheckoutActivity : AppCompatActivity() {
-
     private val binding: ActivityCheckoutBinding by lazy {
         ActivityCheckoutBinding.inflate(layoutInflater)
     }
-
 
     private val checkoutViewModel: CheckoutViewModel by viewModel()
 
@@ -59,15 +57,14 @@ class CheckoutActivity : AppCompatActivity() {
                             binding.layoutState.tvError.isVisible = false
                             binding.layoutContent.root.isVisible = false
                             binding.layoutContent.rvCart.isVisible = false
-
                         },
                         doOnError = {
                             Toast.makeText(
                                 this,
                                 getString(R.string.error_checkout),
-                                Toast.LENGTH_SHORT
+                                Toast.LENGTH_SHORT,
                             ).show()
-                        }
+                        },
                     )
                 }
             } else {
@@ -84,7 +81,7 @@ class CheckoutActivity : AppCompatActivity() {
 
         dialog.window?.setLayout(
             ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
+            ViewGroup.LayoutParams.WRAP_CONTENT,
         )
 
         val ivSuccess = dialog.findViewById<ImageView>(R.id.iv_success)
@@ -154,7 +151,7 @@ class CheckoutActivity : AppCompatActivity() {
                     binding.layoutContent.root.isVisible = false
                     binding.layoutContent.rvCart.isVisible = false
                     binding.cvSectionOrder.isVisible = false
-                }
+                },
             )
         }
     }

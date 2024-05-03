@@ -31,14 +31,18 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerViews()
         setClickAction()
@@ -59,7 +63,7 @@ class HomeFragment : Fragment() {
             it.proceedWhen(
                 doOnSuccess = {
                     it.payload?.let { data -> bindCategory(data) }
-                }
+                },
             )
         }
     }
@@ -69,7 +73,7 @@ class HomeFragment : Fragment() {
             it.proceedWhen(
                 doOnSuccess = {
                     it.payload?.let { data -> bindMenu(data) }
-                }
+                },
             )
         }
     }
@@ -79,7 +83,7 @@ class HomeFragment : Fragment() {
         bindAdapterMenu()
     }
 
-    private fun bindMenuList(isUsingGrid : Boolean) {
+    private fun bindMenuList(isUsingGrid: Boolean) {
         val columnCount = if (isUsingGrid) 2 else 1
         val listType = if (isUsingGrid) MenuAdapter.MODE_GRID else MenuAdapter.MODE_LIST
 
@@ -90,13 +94,17 @@ class HomeFragment : Fragment() {
         menuAdapter.notifyDataSetChanged()
     }
 
-    private fun bindAdapterMenu(){
+    private fun bindAdapterMenu() {
         val listType = if (homeViewModel.isUsingGrid.value == true) MenuAdapter.MODE_GRID else MenuAdapter.MODE_LIST
-        menuAdapter = MenuAdapter(object : MenuAdapter.OnItemClickedListener<Menu> {
-            override fun onItemClicked(item: Menu) {
-                navigateToDetail(item)
-            }
-        }, listType)
+        menuAdapter =
+            MenuAdapter(
+                object : MenuAdapter.OnItemClickedListener<Menu> {
+                    override fun onItemClicked(item: Menu) {
+                        navigateToDetail(item)
+                    }
+                },
+                listType,
+            )
     }
 
     private fun bindCategory(data: List<Category>) {
@@ -123,9 +131,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun navigateToDetail(item: Menu) {
-        val intent = Intent(requireContext(), DetailFoodActivity::class.java).apply {
-            putExtra(DetailFoodActivity.EXTRA_MENU, item)
-        }
+        val intent =
+            Intent(requireContext(), DetailFoodActivity::class.java).apply {
+                putExtra(DetailFoodActivity.EXTRA_MENU, item)
+            }
         startActivity(intent)
     }
 }

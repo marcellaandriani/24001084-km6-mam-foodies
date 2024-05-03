@@ -10,10 +10,9 @@ import com.example.foodiesapp.data.source.local.database.entity.CartEntity
 @Database(
     entities = [CartEntity::class],
     version = 1,
-    exportSchema = true
+    exportSchema = true,
 )
-
-abstract class  AppDatabase : RoomDatabase(){
+abstract class AppDatabase : RoomDatabase() {
     abstract fun cartDao(): CartDao
 
     companion object {
@@ -23,7 +22,7 @@ abstract class  AppDatabase : RoomDatabase(){
             return Room.databaseBuilder(
                 context.applicationContext,
                 AppDatabase::class.java,
-                DB_NAME
+                DB_NAME,
             ).fallbackToDestructiveMigration().build()
         }
     }

@@ -5,16 +5,16 @@ import com.google.gson.annotations.SerializedName
 
 @Keep
 data class MenuItemResponse(
-   @SerializedName("image_url")
+    @SerializedName("image_url")
     val imageUrl: String?,
-   @SerializedName("nama")
+    @SerializedName("nama")
     val nama: String?,
-   @SerializedName("harga_format")
+    @SerializedName("harga_format")
     val hargaFormat: String?,
-   @SerializedName("harga")
+    @SerializedName("harga")
     val harga: Int?,
-   @SerializedName("detail")
+    @SerializedName("detail")
     val detail: String?,
-   @SerializedName("alamat_resto")
-    val alamatResto: String?
+    @SerializedName("alamat_resto")
+    val alamatResto: String?,
 )

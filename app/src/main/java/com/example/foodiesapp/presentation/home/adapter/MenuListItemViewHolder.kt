@@ -9,12 +9,11 @@ import com.example.foodiesapp.utils.toIndonesianFormat
 
 class MenuListItemViewHolder(
     private val binding: ItemListMenuBinding,
-    private val listener: MenuAdapter.OnItemClickedListener<Menu>
+    private val listener: MenuAdapter.OnItemClickedListener<Menu>,
 ) : RecyclerView.ViewHolder(binding.root), ViewHolderBinder<Menu> {
-
     override fun bind(item: Menu) {
         item.let {
-            binding.ivListMenuImage.load(it.imgUrl){
+            binding.ivListMenuImage.load(it.imgUrl) {
                 crossfade(true)
                 error(R.mipmap.ic_launcher)
             }
@@ -26,4 +25,3 @@ class MenuListItemViewHolder(
         }
     }
 }
-

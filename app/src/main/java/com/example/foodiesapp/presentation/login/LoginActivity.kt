@@ -12,7 +12,6 @@ import com.example.foodiesapp.utils.proceedWhen
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
-
     private val binding: ActivityLoginBinding by lazy {
         ActivityLoginBinding.inflate(layoutInflater)
     }
@@ -30,7 +29,7 @@ class LoginActivity : AppCompatActivity() {
         binding.layoutFormLogin.btnLogin.setOnClickListener {
             inputLogin()
         }
-        binding.layoutFormLogin.tvNavToRegister.setOnClickListener{
+        binding.layoutFormLogin.tvNavToRegister.setOnClickListener {
             navigateRegister()
         }
     }
@@ -41,8 +40,11 @@ class LoginActivity : AppCompatActivity() {
         doLogin(email, password)
     }
 
-    private fun doLogin(email: String, password: String) {
-        loginViewModel.doLogin(email, password).observe(this){ result ->
+    private fun doLogin(
+        email: String,
+        password: String,
+    ) {
+        loginViewModel.doLogin(email, password).observe(this) { result ->
             result.proceedWhen(
                 doOnSuccess = {
                     binding.layoutFormLogin.pbLogin.isVisible = false
@@ -50,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(
                         this,
                         "Login Success",
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
                     navigateToMain()
                 },
@@ -64,22 +66,26 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(
                         this,
                         "Login Failed",
-                        Toast.LENGTH_SHORT
+                        Toast.LENGTH_SHORT,
                     ).show()
-                }
+                },
             )
         }
     }
 
     private fun navigateToMain() {
-        startActivity(Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
-        })
+        startActivity(
+            Intent(this, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+            },
+        )
     }
 
     private fun navigateRegister() {
-        startActivity(Intent(this, RegisterActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        })
+        startActivity(
+            Intent(this, RegisterActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            },
+        )
     }
 }

@@ -1,7 +1,6 @@
 package com.example.foodiesapp.presentation.detailfood
 
 import android.os.Bundle
-import android.view.KeyEvent.DispatcherState
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,22 +11,22 @@ import com.example.foodiesapp.data.repository.CartRepository
 import com.example.foodiesapp.utils.ResultWrapper
 import kotlinx.coroutines.Dispatchers
 import java.lang.IllegalStateException
-import java.util.zip.DeflaterInputStream
 
 class DetailFoodViewModel(
     private val extras: Bundle?,
-    private val cartRepository: CartRepository
+    private val cartRepository: CartRepository,
 ) : ViewModel() {
-
     val menu = extras?.getParcelable<Menu>(DetailFoodActivity.EXTRA_MENU)
 
-    val menuCountLiveData = MutableLiveData(0).apply {
-        postValue(0)
-    }
+    val menuCountLiveData =
+        MutableLiveData(0).apply {
+            postValue(0)
+        }
 
-    val priceLiveData = MutableLiveData<Double>().apply {
-        postValue(0.0)
-    }
+    val priceLiveData =
+        MutableLiveData<Double>().apply {
+            postValue(0.0)
+        }
 
     fun add() {
         val count = (menuCountLiveData.value ?: 0) + 1

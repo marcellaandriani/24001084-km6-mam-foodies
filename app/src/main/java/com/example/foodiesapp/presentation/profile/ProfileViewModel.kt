@@ -11,18 +11,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(private val repository: UserRepository) : ViewModel() {
-
     val profileData = MutableLiveData<Profile>()
 
     val isEditMode = MutableLiveData<Boolean>()
 
     init {
-        profileData.value = Profile(
-            username = "",
-            email = "",
-            password = "",
-            profileImg = "https://i.pinimg.com/474x/a7/c8/16/a7c8160be69a3135f496df24290d000f.jpg"
-        )
+        profileData.value =
+            Profile(
+                username = "",
+                email = "",
+                password = "",
+                profileImg = "https://i.pinimg.com/474x/a7/c8/16/a7c8160be69a3135f496df24290d000f.jpg",
+            )
     }
 
     fun changeEditMode() {
@@ -53,6 +53,6 @@ class ProfileViewModel(private val repository: UserRepository) : ViewModel() {
     fun doLogout() {
         repository.doLogout()
     }
-    fun getCurrentUser() = repository.getCurrentUser()
 
+    fun getCurrentUser() = repository.getCurrentUser()
 }

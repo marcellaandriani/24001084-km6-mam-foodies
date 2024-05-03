@@ -11,7 +11,7 @@ data class Menu(
     var imgUrl: String,
     val mapsUrl: String,
     var price: Double,
-    var formatPrice : String,
+    var formatPrice: String,
     var description: String,
-    var address: String
+    var address: String,
 ) : Parcelable
