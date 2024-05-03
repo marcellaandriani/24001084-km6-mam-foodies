@@ -17,12 +17,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class DetailFoodActivity : AppCompatActivity() {
-        private val binding: ActivityDetailFoodBinding by lazy {
-            ActivityDetailFoodBinding.inflate(layoutInflater) }
+    private val binding: ActivityDetailFoodBinding by lazy {
+        ActivityDetailFoodBinding.inflate(layoutInflater)
+    }
 
-        private val detailViewModel: DetailFoodViewModel by viewModel {
-            parametersOf(intent.extras)
-        }
+    private val detailViewModel: DetailFoodViewModel by viewModel {
+        parametersOf(intent.extras)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,18 +50,24 @@ class DetailFoodActivity : AppCompatActivity() {
         detailViewModel.addToCart().observe(this) { result ->
             result.proceedWhen(
                 doOnSuccess = {
-                    Toast.makeText(this,
-                        getString(R.string.text_add_to_cart_success), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.text_add_to_cart_success),
+                        Toast.LENGTH_SHORT,
+                    ).show()
                     finish()
                 },
                 doOnError = {
-                    Toast.makeText(this,
-                        getString(R.string.text_add_to_cart_failed), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.text_add_to_cart_failed),
+                        Toast.LENGTH_SHORT,
+                    ).show()
                 },
                 doOnLoading = {
                     binding.pbLoading.isVisible = true
                     binding.btnAddToCart.isVisible = true
-                }
+                },
             )
         }
     }
@@ -95,7 +102,11 @@ class DetailFoodActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_MENU = "EXTRA_MENU"
-        fun startActivity(context: Context, menu: Menu) {
+
+        fun startActivity(
+            context: Context,
+            menu: Menu,
+        ) {
             val intent = Intent(context, DetailFoodActivity::class.java)
             intent.putExtra(EXTRA_MENU, menu)
             context.startActivity(intent)

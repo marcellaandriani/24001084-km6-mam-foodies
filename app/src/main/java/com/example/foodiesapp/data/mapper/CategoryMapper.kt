@@ -6,7 +6,7 @@ import com.example.foodiesapp.data.source.network.model.category.CategoryItemRes
 fun CategoryItemResponse?.toCategory(): Category {
     return Category(
         name = this?.nama.orEmpty(),
-        imageUrl = this?.imageUrl.orEmpty()
+        imageUrl = this?.imageUrl.orEmpty(),
     )
 }
 

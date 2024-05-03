@@ -9,11 +9,10 @@ import kotlinx.coroutines.tasks.await
 import java.lang.Exception
 
 interface FirebaseService {
-
     @Throws(exceptionClasses = [Exception::class])
     suspend fun doLogin(
         email: String,
-        password: String
+        password: String,
     ): Boolean
 
     @Throws(exceptionClasses = [Exception::class])
@@ -37,15 +36,15 @@ interface FirebaseService {
     fun isLoggedIn(): Boolean
 
     fun getCurrentUser(): FirebaseUser?
-
-
 }
 
-class FirebaseServiceImpl() : FirebaseService{
-
+class FirebaseServiceImpl() : FirebaseService {
     private val firebaseAuth = FirebaseAuth.getInstance()
 
-    override suspend fun doLogin(email: String, password: String): Boolean {
+    override suspend fun doLogin(
+        email: String,
+        password: String,
+    ): Boolean {
         val loginResult = firebaseAuth.signInWithEmailAndPassword(email, password).await()
         return loginResult.user != null
     }
@@ -54,13 +53,13 @@ class FirebaseServiceImpl() : FirebaseService{
         username: String,
         email: String,
         password: String,
-        numberPhone: String
+        numberPhone: String,
     ): Boolean {
         val registerResult = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
         registerResult.user?.updateProfile(
             userProfileChangeRequest {
                 displayName = username
-            }
+            },
         )?.await()
         return registerResult.user != null
     }
@@ -69,7 +68,7 @@ class FirebaseServiceImpl() : FirebaseService{
         getCurrentUser()?.updateProfile(
             userProfileChangeRequest {
                 username?.let { displayName = username }
-            }
+            },
         )?.await()
         return true
     }
@@ -103,5 +102,4 @@ class FirebaseServiceImpl() : FirebaseService{
     override fun getCurrentUser(): FirebaseUser? {
         return firebaseAuth.currentUser
     }
-
 }

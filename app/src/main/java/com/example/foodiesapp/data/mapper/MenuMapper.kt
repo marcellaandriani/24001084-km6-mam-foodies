@@ -11,11 +11,10 @@ fun MenuItemResponse?.toMenu(): Menu {
         price = this?.harga?.toDouble() ?: 0.0, // Changed to toDoubleOrNull()
         description = this?.detail.orEmpty(),
         address = this?.alamatResto.orEmpty(),
-        mapsUrl = "https://maps.app.goo.gl/h4wQKqaBuXzftGK77"
+        mapsUrl = "https://maps.app.goo.gl/h4wQKqaBuXzftGK77",
     )
 }
 
 fun Collection<MenuItemResponse>?.toMenus(): List<Menu> {
     return this?.map { it.toMenu() } ?: emptyList()
 }
-

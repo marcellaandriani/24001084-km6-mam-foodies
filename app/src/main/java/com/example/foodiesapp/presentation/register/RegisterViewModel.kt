@@ -12,14 +12,14 @@ class RegisterViewModel(private val repository: UserRepository) : ViewModel() {
         username: String,
         password: String,
         email: String,
-        numberPhone: String
+        numberPhone: String,
     ): LiveData<ResultWrapper<Boolean>> {
         return repository
             .doRegister(
                 username = username,
                 email = email,
                 password = password,
-                numberPhone = numberPhone
+                numberPhone = numberPhone,
             )
             .asLiveData(Dispatchers.IO)
     }

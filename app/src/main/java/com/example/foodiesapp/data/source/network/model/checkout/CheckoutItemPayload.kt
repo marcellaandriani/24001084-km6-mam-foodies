@@ -7,13 +7,10 @@ import com.google.gson.annotations.SerializedName
 data class CheckoutItemPayload(
     @SerializedName("nama")
     val nama: String? = null,
-
     @SerializedName("qty")
     val qty: Int? = null,
-
     @SerializedName("catatan")
     val catatan: String? = null,
-
     @SerializedName("harga")
     val harga: Int,
-    )
+)

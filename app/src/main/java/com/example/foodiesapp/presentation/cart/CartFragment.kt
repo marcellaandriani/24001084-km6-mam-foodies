@@ -2,11 +2,11 @@ package com.example.foodiesapp.presentation.cart
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.example.foodiesapp.R
 import com.example.foodiesapp.data.model.Cart
 import com.example.foodiesapp.databinding.FragmentCartBinding
@@ -19,35 +19,37 @@ import com.example.foodiesapp.utils.toIndonesianFormat
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CartFragment : Fragment() {
-
     private lateinit var binding: FragmentCartBinding
 
     private val cartViewModel: CartViewModel by viewModel()
 
     private val adapter: CartListAdapter by lazy {
-        CartListAdapter(object : CartListener {
-            override fun onPlusTotalItemCartClicked(cart: Cart) {
-                cartViewModel.increaseCart(cart)
-            }
+        CartListAdapter(
+            object : CartListener {
+                override fun onPlusTotalItemCartClicked(cart: Cart) {
+                    cartViewModel.increaseCart(cart)
+                }
 
-            override fun onMinusTotalItemCartClicked(cart: Cart) {
-                cartViewModel.decreaseCart(cart)
-            }
+                override fun onMinusTotalItemCartClicked(cart: Cart) {
+                    cartViewModel.decreaseCart(cart)
+                }
 
-            override fun onRemoveCartClicked(cart: Cart) {
-                cartViewModel.removeCart(cart)
-            }
+                override fun onRemoveCartClicked(cart: Cart) {
+                    cartViewModel.removeCart(cart)
+                }
 
-            override fun onUserDoneEditingNotes(cart: Cart) {
-                cartViewModel.setCartNotes(cart)
-                hideKeyboard()
-            }
-        })
+                override fun onUserDoneEditingNotes(cart: Cart) {
+                    cartViewModel.setCartNotes(cart)
+                    hideKeyboard()
+                }
+            },
+        )
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
         // Inflate the layout for this fragment
 
@@ -55,7 +57,10 @@ class CartFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
         super.onViewCreated(view, savedInstanceState)
         setupList()
         observeData()
@@ -107,11 +112,10 @@ class CartFragment : Fragment() {
                         binding.tvTotalPrice.text = totalPrice.toIndonesianFormat()
                     }
                     binding.btnCheckout.isEnabled = false
-                }
+                },
             )
         }
     }
-
 
     private fun setupList() {
         binding.rvCart.adapter = this@CartFragment.adapter

@@ -11,17 +11,16 @@ import com.example.foodiesapp.presentation.login.LoginActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
-
     private val binding: ActivityMainBinding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
     private val mainViewModel: MainViewModel by viewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         setUpBottomNav()
-
     }
 
     private fun setUpBottomNav() {
@@ -31,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             when (destination.id) {
                 R.id.menu_tab_profile -> {
-                    if(!mainViewModel.isLoggedIn()){
+                    if (!mainViewModel.isLoggedIn()) {
                         navigateToLogin()
                         controller.navigate(R.id.menu_tab_home)
                     }

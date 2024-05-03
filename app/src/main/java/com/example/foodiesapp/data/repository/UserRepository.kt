@@ -8,16 +8,18 @@ import kotlinx.coroutines.flow.Flow
 import java.lang.Exception
 
 interface UserRepository {
-
     @Throws(exceptionClasses = [Exception::class])
-    fun doLogin(email: String, password: String): Flow<ResultWrapper<Boolean>>
+    fun doLogin(
+        email: String,
+        password: String,
+    ): Flow<ResultWrapper<Boolean>>
 
     @Throws(exceptionClasses = [Exception::class])
     fun doRegister(
         username: String,
         email: String,
         password: String,
-        numberPhone: String
+        numberPhone: String,
     ): Flow<ResultWrapper<Boolean>>
 
     fun updateProfile(username: String? = null): Flow<ResultWrapper<Boolean>>
@@ -36,7 +38,10 @@ interface UserRepository {
 }
 
 class UserRepositoryImpl(private val dataSource: AuthDataSource) : UserRepository {
-    override fun doLogin(email: String, password: String): Flow<ResultWrapper<Boolean>> {
+    override fun doLogin(
+        email: String,
+        password: String,
+    ): Flow<ResultWrapper<Boolean>> {
         return proceedFlow { dataSource.doLogin(email, password) }
     }
 
@@ -44,14 +49,14 @@ class UserRepositoryImpl(private val dataSource: AuthDataSource) : UserRepositor
         username: String,
         email: String,
         password: String,
-        numberPhone: String
+        numberPhone: String,
     ): Flow<ResultWrapper<Boolean>> {
         return proceedFlow {
             dataSource.doRegister(
                 username = username,
                 email = email,
                 password = password,
-                numberPhone = numberPhone
+                numberPhone = numberPhone,
             )
         }
     }
