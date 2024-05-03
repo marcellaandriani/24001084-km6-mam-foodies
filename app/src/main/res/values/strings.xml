@@ -95,6 +95,8 @@
     <string name="text_add_to_cart">Masukkan ke Keranjang</string>
     <string name="text_tambahkan_ke_keranjang">Tambahkan ke Keranjang - %1$s</string>
     <string name="message_request_change_password">Change password request sent to your email Please check to your inbox or spam</string>
-
+    <string name="tv_data_not_found">Category Not Found</string>
+    <string name="tv_menu_not_found">Menu Not Found</string>
+    <string name="text_name">Hi, %1$s</string>
 
 </resources>

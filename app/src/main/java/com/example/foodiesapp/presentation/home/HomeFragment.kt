@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.foodiesapp.R
@@ -39,6 +40,13 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
+    private fun showUserData() {
+        homeViewModel.getCurrentUser()?.let { user ->
+            binding.layoutHeader.tvName.text =
+                getString(R.string.text_name, user.username)
+        }
+    }
+
     override fun onViewCreated(
         view: View,
         savedInstanceState: Bundle?,
@@ -49,6 +57,7 @@ class HomeFragment : Fragment() {
         getCategoryData()
         getMenuData(null)
         observeGridMode()
+        showUserData()
     }
 
     private fun observeGridMode() {
@@ -62,7 +71,17 @@ class HomeFragment : Fragment() {
         homeViewModel.getCategories().observe(viewLifecycleOwner) {
             it.proceedWhen(
                 doOnSuccess = {
+                    binding.layoutCategory.tvNotFoundCategory.isVisible = false
+                    binding.layoutCategory.pbCategory.isVisible = false
                     it.payload?.let { data -> bindCategory(data) }
+                },
+                doOnLoading = {
+                    binding.layoutCategory.tvNotFoundCategory.isVisible = false
+                    binding.layoutCategory.pbCategory.isVisible = true
+                },
+                doOnError = {
+                    binding.layoutCategory.tvNotFoundCategory.isVisible = true
+                    binding.layoutCategory.pbCategory.isVisible = false
                 },
             )
         }
@@ -72,7 +91,17 @@ class HomeFragment : Fragment() {
         homeViewModel.getMenus(category).observe(viewLifecycleOwner) {
             it.proceedWhen(
                 doOnSuccess = {
+                    binding.layoutMenuHome.tvNotFoundMenu.isVisible = false
+                    binding.layoutMenuHome.pbMenu.isVisible = false
                     it.payload?.let { data -> bindMenu(data) }
+                },
+                doOnLoading = {
+                    binding.layoutMenuHome.tvNotFoundMenu.isVisible = false
+                    binding.layoutMenuHome.pbMenu.isVisible = true
+                },
+                doOnError = {
+                    binding.layoutMenuHome.tvNotFoundMenu.isVisible = true
+                    binding.layoutMenuHome.pbMenu.isVisible = false
                 },
             )
         }

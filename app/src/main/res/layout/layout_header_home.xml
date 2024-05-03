@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="8dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -31,7 +32,7 @@
         android:layout_marginStart="16dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="@string/text_greetings"
+        tools:text= "Hi, Cella"
         android:textSize="20sp"
         android:textStyle="bold"
         android:fontFamily="@font/font_raleway_semi_bold"
@@ -56,8 +57,8 @@
         android:layout_width="0dp"
         android:backgroundTint="@color/md_theme_light_secondaryContainer"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:hint="@string/text_search_bar"
-        android:paddingHorizontal="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_greeting"/>
